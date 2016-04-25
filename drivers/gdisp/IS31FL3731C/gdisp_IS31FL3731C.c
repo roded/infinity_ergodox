@@ -167,8 +167,7 @@ LLDSPEC bool_t gdisp_lld_init(GDisplay *g) {
     // software shutdown disable (i.e. turn stuff on)
     write_register(g, IS31_FUNCTIONREG, IS31_REG_SHUTDOWN, IS31_REG_SHUTDOWN_ON);
     gfxSleepMilliseconds(10);
-    __builtin_memset(RAM(g), 0xFF, IS31_PWM_SIZE);
-    write_ram(g, 0, IS31_PWM_REG, IS31_PWM_SIZE);
+    __builtin_memset(RAM(g), 0, sizeof(IS31_FRAME_SIZE));
 
     // Finish Init
     post_init_board(g);
@@ -185,7 +184,6 @@ LLDSPEC bool_t gdisp_lld_init(GDisplay *g) {
 
 #if GDISP_HARDWARE_FLUSH
 	LLDSPEC void gdisp_lld_flush(GDisplay *g) {
-	    return;
 		// Don't flush if we don't need it.
 		if (!(g->flags & GDISP_FLG_NEEDFLUSH))
 			return;
