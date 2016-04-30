@@ -108,7 +108,10 @@ typedef struct{
 
 // Some common routines and macros
 #define PRIV(g)                         ((PrivData*)g->priv)
-#define RAM(g)							(PRIV(g)->ram + 1)
+
+static GFXINLINE uint8_t* RAM(GDisplay* g) {
+    return PRIV(g)->ram + 1;
+}
 
 /*===========================================================================*/
 /* Driver exported functions.                                                */
@@ -189,8 +192,9 @@ LLDSPEC bool_t gdisp_lld_init(GDisplay *g) {
 			return;
 
 		PRIV(g)->page++;
-		PRIV(g)->page %= 1;
+		PRIV(g)->page %= 2;
         write_ram(g, PRIV(g)->page, IS31_PWM_REG, IS31_PWM_SIZE);
+        gfxSleepMilliseconds(1);
         write_register(g, IS31_FUNCTIONREG, IS31_REG_PICTDISP, PRIV(g)->page);
 
 		g->flags &= ~GDISP_FLG_NEEDFLUSH;
@@ -212,8 +216,7 @@ LLDSPEC bool_t gdisp_lld_init(GDisplay *g) {
 			y = g->p.y;
 			break;
 		}
-
-		RAM(g)[get_led_address(g, x, y)] = LUMA_OF(g->p.color);
+		RAM(g)[get_led_address(g, x, y)] = gdispColor2Native(g->p.color);
 		g->flags |= GDISP_FLG_NEEDFLUSH;
 	}
 #endif
@@ -233,7 +236,7 @@ LLDSPEC bool_t gdisp_lld_init(GDisplay *g) {
 			y = g->p.y;
 			break;
 		}
-		return LUMA2COLOR(RAM(g)[get_led_address(g, x, y)]);
+		return gdispNative2Color(RAM(g)[get_led_address(g, x, y)]);
 	}
 #endif
 
