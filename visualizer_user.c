@@ -132,11 +132,11 @@ void update_user_visualizer_state(visualizer_state_t* state) {
     }
     else if (state->status.layer & 0x4) {
         state->target_lcd_color = LCD_COLOR(0, 0xB0, 0xFF);
-        state->layer_text = "KBD functions";
+        state->layer_text = "KBD Functions";
     }
     else if (state->status.layer & 0x2) {
         state->target_lcd_color = LCD_COLOR(0x80, 0xB0, 0xFF);
-        state->layer_text = "Function keys";
+        state->layer_text = "Function Keys";
     }
     else {
         state->target_lcd_color = LCD_COLOR(0x40, 0xB0, 0xFF);
